@@ -21,8 +21,6 @@ new p5(p => {
   let portraitPositions = [];
   let portraitSize = 120;
 
-  let flyingYous = [];
-
   p.preload = () => {
     bgImg = p.loadImage("blankpage2.jpg");
 
@@ -86,20 +84,6 @@ new p5(p => {
         p.tint(255, port.alpha);
         p.image(port.next, pos.x - portraitSize / 2, pos.y - portraitSize / 2, portraitSize, portraitSize);
         p.noTint();
-      }
-    }
-
-    // Update and draw flying "you" words
-    for (let i = flyingYous.length - 1; i >= 0; i--) {
-      let fy = flyingYous[i];
-      fy.x += fy.vx;
-      fy.y += fy.vy;
-      fy.alpha -= 2;
-      if (fy.alpha <= 0) {
-        flyingYous.splice(i, 1);
-      } else {
-        p.fill(0, fy.alpha);
-        p.text("you", fy.x, fy.y);
       }
     }
   };
@@ -216,22 +200,6 @@ new p5(p => {
                 port.alpha = 0;
               }
               return;
-            }
-          } else {
-            // Add flying "you" word
-            if (
-              p.mouseX >= wordX &&
-              p.mouseX <= wordX + w &&
-              p.mouseY >= lineY - 20 &&
-              p.mouseY <= lineY + 20
-            ) {
-              flyingYous.push({
-                x: wordX + w / 2,
-                y: lineY,
-                vx: p.random(-2, 2),
-                vy: p.random(-2, -5),
-                alpha: 255
-              });
             }
           }
         }

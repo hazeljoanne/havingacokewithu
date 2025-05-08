@@ -25,7 +25,7 @@ new p5(p => {
 
   p.preload = () => {
     console.log("🌀 sketch2.js preload running");
-
+  
     bgImg2 = p.loadImage('blankpage2.jpg',
       () => console.log("✅ Background image loaded"),
       () => {
@@ -33,12 +33,17 @@ new p5(p => {
         bgImg2 = null;
       }
     );
-
-    imageNames.forEach(name => {
+  
+    // Initialize image array with null values to preserve order
+    for (let i = 0; i < imageNames.length; i++) {
+      images[i] = null;
+    }
+  
+    imageNames.forEach((name, i) => {
       p.loadImage(name,
         img => {
           console.log(`✅ Loaded ${name}`);
-          images.push(img);
+          images[i] = img; // 🔁 assign directly by index
         },
         () => {
           console.error(`❌ Failed to load ${name}`);
@@ -46,11 +51,12 @@ new p5(p => {
           placeholder.background(220);
           placeholder.textAlign(p.CENTER, p.CENTER);
           placeholder.text("Missing Image", 100, 150);
-          images.push(placeholder);
+          images[i] = placeholder;
         }
       );
     });
   };
+  
 
   p.setup = () => {
     console.log("✅ [sketch2] setup called");
