@@ -1,7 +1,13 @@
+/* Make background images scale full page */
 html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
 }
-canvas {
-  display: block;
+
+/* Apply Libre Bodoni font and set default styles */
+body {
+  font-family: '', serif;
+  background-color: black; /* fallback background */
+  overflow: hidden; /* optional: prevent scrollbars if using full-canvas sketches */
 }
