@@ -1,5 +1,4 @@
-
-let cokeImg, bgImg, decor1, decor2;
+let cokeImg, bgImg1, decor1, decor2;
 let coke1Pos, coke2Pos;
 let showSecondBottle = false;
 let clinkAnimation = false;
@@ -9,9 +8,16 @@ let pulsateDirection = 1;
 let youX, youY, youW, youH;
 let fontSize = 32;
 
+let bounceCap = false;
+let bounceY = 0;
+let bounceSpeed = 2;
+let bounceDirection = 1;
+let decor1X = 100;
+let decor1Y = 400;
+
 function preload() {
   cokeImg = loadImage('cokebottle.png');
-  bgImg = loadImage('blankpage2.jpg');
+  bgImg1 = loadImage('blankpage2.jpg');
   decor1 = loadImage('cokecap2.png');
   decor2 = loadImage('cokecap2.png');
 }
@@ -25,13 +31,16 @@ function setup() {
 }
 
 function draw() {
-  background(bgImg);
+  background(bgImg1);
 
+  if (bounceCap) {
+    bounceY += bounceSpeed * bounceDirection;
+    if (bounceY > 15 || bounceY < -15) bounceDirection *= -1;
+  }
 
-  image(decor1, 100, 400, 100, 100);
+  image(decor1, decor1X, decor1Y + bounceY, 100, 100);
   image(decor2, width - 150, 100, 100, 100);
 
- 
   fill(0);
   let sentence = "having a coke with you";
   let words = sentence.split(" ");
@@ -49,7 +58,6 @@ function draw() {
   let x = startX;
   let y = height / 2 - 100;
 
- 
   for (let i = 0; i < words.length; i++) {
     let word = words[i];
     let w = wordWidths[i];
@@ -66,7 +74,7 @@ function draw() {
         mouseY >= youY &&
         mouseY <= youY + youH
       ) {
-        fill(139, 0, 0); 
+        fill(139, 0, 0);
       } else {
         fill(0);
       }
@@ -106,12 +114,12 @@ function draw() {
     } else {
       clinkAnimation = false;
       clinkProgress = 0;
+      bounceCap = true;
     }
   }
 }
 
 function mousePressed() {
- 
   if (
     mouseX >= youX &&
     mouseX <= youX + youW &&
@@ -135,4 +143,36 @@ function mousePressed() {
       clinkAnimation = true;
     }
   }
+
+  if (bounceCap) {
+    let cx = decor1X;
+    let cy = decor1Y + bounceY;
+    let cw = 100;
+    let ch = 100;
+
+    if (
+      mouseX >= cx &&
+      mouseX <= cx + cw &&
+      mouseY >= cy &&
+      mouseY <= cy + ch
+    ) {
+      goToSketch2();
+    }
+  }
+}
+
+function goToSketch2() {
+  console.log("🎯 Switching to sketch2.js...");
+
+  if (typeof remove === 'function') remove();
+  document.querySelectorAll("canvas").forEach(c => c.remove());
+
+  const oldScript = document.querySelector("script[src='sketch.js']");
+  if (oldScript) oldScript.remove();
+
+  const newScript = document.createElement("script");
+  newScript.src = "sketch2.js";
+  newScript.onload = () => console.log("✅ sketch2.js loaded");
+  newScript.onerror = () => console.error("❌ sketch2.js failed to load");
+  document.body.appendChild(newScript);
 }
